@@ -26,11 +26,11 @@ private:
     const int servoFrequency = 50;
 
     const uint8_t servo1Init = 30;  // 30 // 80
-    const uint8_t servo2Init = 145; // 165 // 110
+    const uint8_t servo2Init = 110; // 110 // 60
     const uint8_t servo3Init = 50;  // 50 // 110
-    const uint8_t servo4Init = 175; // 175 // 130
+    const uint8_t servo4Init = 140; // 175 // 130
 
-    const uint8_t expansionAngle = 40;
+    const uint8_t expansionAngle = 50;
 
 public:
     // Constructor
@@ -481,73 +481,73 @@ void setup()
 
 void loop()
 {
-    //     String angle_input;
-    //     int angle = 90;
-    //     char command;
-    //     command = Serial.read();
-    //     switch (command)
+    // String angle_input;
+    // int angle = 90;
+    // char command;
+    // command = Serial.read();
+    // switch (command)
+    // {
+    // case 'w':
+    //     Serial.println("forward");
+    //     sendCarCommand("forward");
+    //     break;
+    // case 'a':
+    //     Serial.println("left");
+    //     sendCarCommand("left");
+    //     break;
+    // case 's':
+    //     Serial.println("backward");
+    //     sendCarCommand("backward");
+    //     break;
+    // case 'd':
+    //     Serial.println("right");
+    //     sendCarCommand("right");
+    //     break;
+    // case 'j':
+    //     Serial.println("stop");
+    //     sendCarCommand("stop");
+    //     break;
+    // case 'i':
+    //     Serial.println("slow-speed");
+    //     sendCarCommand("slow-speed");
+    //     break;
+    // case 'o':
+    //     Serial.println("normal-speed");
+    //     sendCarCommand("normal-speed");
+    //     break;
+    // case 'p':
+    //     Serial.println("fast-speed");
+    //     sendCarCommand("fast-speed");
+    //     break;
+    // case 'n':
+    //     Serial.println("contraction");
+    //     sendCarCommand("contraction");
+    //     break;
+    // case 'm':
+    //     Serial.println("expansion");
+    //     sendCarCommand("expansion");
+    //     break;
+    // case 'l':
+    //     Serial.println("angle mode");
+    //     while (true)
     //     {
-    //     case 'w':
-    //         Serial.println("forward");
-    //         sendCarCommand("forward");
-    //         break;
-    //     case 'a':
-    //         Serial.println("left");
-    //         sendCarCommand("left");
-    //         break;
-    //     case 's':
-    //         Serial.println("backward");
-    //         sendCarCommand("backward");
-    //         break;
-    //     case 'd':
-    //         Serial.println("right");
-    //         sendCarCommand("right");
-    //         break;
-    //     case 'j':
-    //         Serial.println("stop");
-    //         sendCarCommand("stop");
-    //         break;
-    //     case 'i':
-    //         Serial.println("slow-speed");
-    //         sendCarCommand("slow-speed");
-    //         break;
-    //     case 'o':
-    //         Serial.println("normal-speed");
-    //         sendCarCommand("normal-speed");
-    //         break;
-    //     case 'p':
-    //         Serial.println("fast-speed");
-    //         sendCarCommand("fast-speed");
-    //         break;
-    //     case 'n':
-    //         Serial.println("contraction");
-    //         sendCarCommand("contraction");
-    //         break;
-    //     case 'm':
-    //         Serial.println("expansion");
-    //         sendCarCommand("expansion");
-    //         break;
-    //     case 'l':
-    //         Serial.println("angle mode");
-    //         while (true)
+    //         // if (Serial.available() > 0) // 입력 데이터가 있는 경우에만 처리
+    //         // {
+    //         // angle_input = Serial.readStringUntil('\n');
+    //         angle = Serial.parseInt();
+    //         if (angle == 0)
     //         {
-    //             // if (Serial.available() > 0) // 입력 데이터가 있는 경우에만 처리
-    //             // {
-    //             // angle_input = Serial.readStringUntil('\n');
-    //             angle = Serial.parseInt();
-    //             if (angle == 0)
-    //             {
-    //                 Serial.println("Exiting servo control mode.");
-    //                 break;
-    //             }
-    //             else
-    //             {
-    //                 Serial.printf("Moving servos to %d degrees.\n", angle);
-    //                 ass.moveServos(angle, angle, angle, angle); // 입력받은 각도로 서보 이동
-    //             }
+    //             Serial.println("Exiting servo control mode.");
+    //             break;
     //         }
-
-    //     default:
-    //         break;
+    //         else
+    //         {
+    //             Serial.printf("Moving servos to %d degrees.\n", angle);
+    //             ass.moveServos(angle, angle, angle, angle); // 입력받은 각도로 서보 이동
+    //         }
     //     }
+
+    // default:
+    //     break;
+    // }
 }
