@@ -7,8 +7,8 @@
 
 enum speedSettings
 {
-    SLOW = 210,
-    NORMAL = 230,
+    SLOW = 180,
+    NORMAL = 220,
     FAST = 255
 };
 
@@ -25,8 +25,8 @@ private:
     const uint8_t servo4Pin = 2;  // RB
     const int servoFrequency = 50;
 
-    const uint8_t servo1Init = 30;  // 30 // 80
-    const uint8_t servo2Init = 110; // 110 // 60
+    const uint8_t servo1Init = 5;   // 30 // 80
+    const uint8_t servo2Init = 165; // 110 // 60
     const uint8_t servo3Init = 50;  // 50 // 110
     const uint8_t servo4Init = 140; // 175 // 130
 
@@ -79,17 +79,17 @@ class Car
 { // motordrive 1 > left, motordrive 2 > right
 private:
     // front left motor connections
-    const uint8_t md1in1 = 12;
-    const uint8_t md1in2 = 13;
+    const uint8_t md1in1 = 13;
+    const uint8_t md1in2 = 12;
     // front right motor connections
-    const uint8_t md1in3 = 14;
-    const uint8_t md1in4 = 15;
+    const uint8_t md1in3 = 17;
+    const uint8_t md1in4 = 22;
     // rear left motor connections
     const uint8_t md2in1 = 16;
     const uint8_t md2in2 = 33;
     // rear right motor connections
-    const uint8_t md2in3 = 18;
-    const uint8_t md2in4 = 19;
+    const uint8_t md2in3 = 19;
+    const uint8_t md2in4 = 18;
 
     // PWM Setup to control motor speed
     const uint8_t SPEED_CONTROL_PIN_1 = 25; // LF
@@ -402,6 +402,87 @@ void notFound(AsyncWebServerRequest *request)
     request->send(404, "text/plain", "Not found");
 }
 
+void wifiMonitorTask(void *param)
+{
+    bool wasConnected = false;
+
+    while (true)
+    {
+        int clientCount = WiFi.softAPgetStationNum();
+
+        if (clientCount == 0 && wasConnected)
+        {
+            Serial.println("[WiFi Monitor] All clients disconnected. Stopping system...");
+            car.stop();
+            ass.contraction();
+
+            wasConnected = false;
+        }
+
+        else if (clientCount > 0 && !wasConnected)
+        {
+            Serial.println("[WiFi Monitor] Client connected.");
+            wasConnected = true;
+        }
+
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
+}
+
+void handleSerialInput()
+{
+    if (Serial.available())
+    {
+        char command = Serial.read();
+        switch (command)
+        {
+        case 'w':
+            Serial.println("forward");
+            sendCarCommand("forward");
+            break;
+        case 'a':
+            Serial.println("left");
+            sendCarCommand("left");
+            break;
+        case 's':
+            Serial.println("backward");
+            sendCarCommand("backward");
+            break;
+        case 'd':
+            Serial.println("right");
+            sendCarCommand("right");
+            break;
+        case 'j':
+            Serial.println("stop");
+            sendCarCommand("stop");
+            break;
+        case 'i':
+            Serial.println("slow-speed");
+            sendCarCommand("slow-speed");
+            break;
+        case 'o':
+            Serial.println("normal-speed");
+            sendCarCommand("normal-speed");
+            break;
+        case 'p':
+            Serial.println("fast-speed");
+            sendCarCommand("fast-speed");
+            break;
+        case 'n':
+            Serial.println("contraction");
+            sendCarCommand("contraction");
+            break;
+        case 'm':
+            Serial.println("expansion");
+            sendCarCommand("expansion");
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
 // Setup function
 void setup()
 {
@@ -438,6 +519,7 @@ void setup()
         Serial.println("An Error has occurred while mounting SPIFFS");
         return;
     }
+    xTaskCreatePinnedToCore(wifiMonitorTask, "WiFiMonitor", 2048, NULL, 2, NULL, 1);
 
     // Add callback function to websocket server
     ws.onEvent(onWsEvent);
@@ -481,73 +563,5 @@ void setup()
 
 void loop()
 {
-    // String angle_input;
-    // int angle = 90;
-    // char command;
-    // command = Serial.read();
-    // switch (command)
-    // {
-    // case 'w':
-    //     Serial.println("forward");
-    //     sendCarCommand("forward");
-    //     break;
-    // case 'a':
-    //     Serial.println("left");
-    //     sendCarCommand("left");
-    //     break;
-    // case 's':
-    //     Serial.println("backward");
-    //     sendCarCommand("backward");
-    //     break;
-    // case 'd':
-    //     Serial.println("right");
-    //     sendCarCommand("right");
-    //     break;
-    // case 'j':
-    //     Serial.println("stop");
-    //     sendCarCommand("stop");
-    //     break;
-    // case 'i':
-    //     Serial.println("slow-speed");
-    //     sendCarCommand("slow-speed");
-    //     break;
-    // case 'o':
-    //     Serial.println("normal-speed");
-    //     sendCarCommand("normal-speed");
-    //     break;
-    // case 'p':
-    //     Serial.println("fast-speed");
-    //     sendCarCommand("fast-speed");
-    //     break;
-    // case 'n':
-    //     Serial.println("contraction");
-    //     sendCarCommand("contraction");
-    //     break;
-    // case 'm':
-    //     Serial.println("expansion");
-    //     sendCarCommand("expansion");
-    //     break;
-    // case 'l':
-    //     Serial.println("angle mode");
-    //     while (true)
-    //     {
-    //         // if (Serial.available() > 0) // 입력 데이터가 있는 경우에만 처리
-    //         // {
-    //         // angle_input = Serial.readStringUntil('\n');
-    //         angle = Serial.parseInt();
-    //         if (angle == 0)
-    //         {
-    //             Serial.println("Exiting servo control mode.");
-    //             break;
-    //         }
-    //         else
-    //         {
-    //             Serial.printf("Moving servos to %d degrees.\n", angle);
-    //             ass.moveServos(angle, angle, angle, angle); // 입력받은 각도로 서보 이동
-    //         }
-    //     }
-
-    // default:
-    //     break;
-    // }
+    handleSerialInput();
 }
